@@ -1,0 +1,115 @@
+<?xml version="1.0"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>net.sf.okapi.tm</groupId>
+	<artifactId>pensieve-rest-server</artifactId>
+	<version>0.7-SNAPSHOT</version>
+	<packaging>war</packaging>
+	<name>Pensieve REST server</name>
+
+	<dependencies>
+
+		<dependency>
+			<groupId>javax.enterprise</groupId>
+			<artifactId>cdi-api</artifactId>
+			<scope>provided</scope>
+			<version>1.0-SP1</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.jboss.resteasy</groupId>
+			<artifactId>resteasy-cdi</artifactId>
+			<version>2.0-beta-2</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.jboss.weld.servlet</groupId>
+			<artifactId>weld-servlet</artifactId>
+			<version>1.0.1-Final</version>
+			<scope>runtime</scope>
+		</dependency>
+
+	</dependencies>
+
+	<build>
+		<finalName>pensieve</finalName>
+
+		<plugins>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<source>1.6</source>
+					<target>1.6</target>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-eclipse-plugin</artifactId>
+				<configuration>
+					<wtpversion>2.0</wtpversion>
+				</configuration>
+			</plugin>
+			
+			<!-- Embedded Jetty with 'mvn jetty:run'. -->
+
+			<plugin>
+				<groupId>org.mortbay.jetty</groupId>
+				<artifactId>maven-jetty-plugin</artifactId>
+				<configuration>
+					<!-- force friendly name instead of artifact name + version -->
+					<contextPath>${build.finalName}</contextPath>
+					<!-- declare datasource -->
+					<jettyEnvXml>${basedir}/src/test/resources/jetty-env.xml</jettyEnvXml>
+					<!-- This parameter will auto-deploy modified classes -->
+					<scanIntervalSeconds>3</scanIntervalSeconds>
+				</configuration>
+			</plugin>
+			
+			<!--
+				Cargo - deploys to Tomcat using command 'mvn clean package cargo:redeploy'.
+			-->
+			<plugin>
+				<groupId>org.codehaus.cargo</groupId>
+				<artifactId>cargo-maven2-plugin</artifactId>
+				<configuration>
+					<container>
+						<containerId>tomcat6x</containerId>
+						<type>remote</type>
+					</container>
+					<configuration>
+						<type>runtime</type>
+						<properties>
+							<!-- Declare a tomcat.user and tomcat.password in your settings file -->
+							<cargo.remote.username>${tomcat.username}</cargo.remote.username>
+							<cargo.remote.password>${tomcat.password}</cargo.remote.password>
+						</properties>
+					</configuration>
+				</configuration>
+			</plugin>
+
+		</plugins>
+		
+	</build>
+
+	<repositories>
+		<repository>
+			<id>repository.jboss.org</id>
+			<name>JBoss Repository</name>
+			<url>http://repository.jboss.org/maven2</url>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+		</repository>
+	</repositories>
+
+
+</project>
+

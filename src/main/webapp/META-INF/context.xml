@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Context>
+	<Manager pathname="" /> <!-- disables storage of sessions across restarts -->
+	<!-- Uncomment to enable injection into Servlet -->
+	<!-- <Listener className="org.jboss.weld.environment.tomcat.WeldLifecycleListener"/> -->
+</Context>
