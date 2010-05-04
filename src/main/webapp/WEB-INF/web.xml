@@ -22,7 +22,7 @@
 	<!-- TODO remove -->
 	<context-param>
 		<param-name>resteasy.injector.factory</param-name>
-		<param-value>JettyCdiInjectorFactory</param-value>
+		<param-value>org.jboss.resteasy.cdi.ServletCdiInjectorFactory</param-value>
 	</context-param>
 
 	<context-param>

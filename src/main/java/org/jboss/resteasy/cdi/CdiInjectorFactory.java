@@ -1,3 +1,4 @@
+package org.jboss.resteasy.cdi;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AccessibleObject;
@@ -9,9 +10,6 @@ import javax.enterprise.inject.spi.BeanManager;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
-import org.jboss.resteasy.cdi.CdiConstructorInjector;
-import org.jboss.resteasy.cdi.NoopPropertyInjector;
-import org.jboss.resteasy.cdi.ResteasyCdiConfiguration;
 import org.jboss.resteasy.core.ValueInjector;
 import org.jboss.resteasy.spi.ConstructorInjector;
 import org.jboss.resteasy.spi.InjectorFactory;
@@ -28,15 +26,15 @@ import static org.jboss.resteasy.cdi.Bootstrap.lookupResteasyCdiConfiguration;
  * @author Jozef Hartinger
  * 
  */
-public class JettyCdiInjectorFactory implements InjectorFactory
+public class CdiInjectorFactory implements InjectorFactory
 {
-   private static final Logger log = LoggerFactory.getLogger(JettyCdiInjectorFactory.class);
+   private static final Logger log = LoggerFactory.getLogger(CdiInjectorFactory.class);
    private PropertyInjector noopPropertyInjector = new NoopPropertyInjector();
    private InjectorFactory delegate;
    private BeanManager manager;
    private ResteasyCdiConfiguration configuration;
 
-   public JettyCdiInjectorFactory()
+   public CdiInjectorFactory()
    {
       this.delegate = ResteasyProviderFactory.getInstance().getInjectorFactory();
       this.manager = lookupBeanManager();
@@ -82,7 +80,7 @@ public class JettyCdiInjectorFactory implements InjectorFactory
       return delegate.createParameterExtractor(injectTargetClass, injectTarget, type, genericType, annotations);
    }
    
-   private BeanManager lookupBeanManager()
+   protected BeanManager lookupBeanManager()
    {
       InitialContext ctx = null;
       try
@@ -101,15 +99,7 @@ public class JettyCdiInjectorFactory implements InjectorFactory
          }
          catch (NamingException ne)
          {
-             try
-             {
-                log.debug("Lookup failed. Trying java:comp/env/BeanManager");
-                return (BeanManager) ctx.lookup("java:comp/env/BeanManager");
-             }
-             catch (NamingException nex)
-             {
-                throw new RuntimeException("Unable to obtain BeanManager.", nex);
-             }
+            throw new RuntimeException("Unable to obtain BeanManager.", ne);
          }
       }
    }
