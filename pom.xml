@@ -10,25 +10,54 @@
 	<name>Pensieve REST server</name>
 
 	<dependencies>
-
+		
+		<!--
+		Provided by weld servlet 
 		<dependency>
 			<groupId>javax.enterprise</groupId>
 			<artifactId>cdi-api</artifactId>
 			<scope>provided</scope>
 			<version>1.0-SP1</version>
 		</dependency>
-
-		<dependency>
-			<groupId>org.jboss.resteasy</groupId>
-			<artifactId>resteasy-cdi</artifactId>
-			<version>2.0-beta-2</version>
-		</dependency>
+ 		-->
 
 		<dependency>
 			<groupId>org.jboss.weld.servlet</groupId>
 			<artifactId>weld-servlet</artifactId>
 			<version>1.0.1-Final</version>
-			<scope>runtime</scope>
+		</dependency>
+ 		
+		<dependency>
+			<groupId>org.jboss.resteasy</groupId>
+			<artifactId>resteasy-cdi</artifactId>
+			<version>2.0-beta-2</version>
+			<exclusions>
+				<exclusion>
+					<!-- Provided by weld-servlet -->
+					<groupId>org.slf4j</groupId>
+					<artifactId>slf4j-api</artifactId>
+				</exclusion>					
+				<exclusion>
+					<!-- Provided by weld-servlet -->
+					<groupId>org.slf4j</groupId>
+					<artifactId>slf4j-simple</artifactId>
+				</exclusion>					
+				<exclusion>
+					<!-- Provided by weld-servlet -->
+					<groupId>org.slf4j</groupId>
+					<artifactId>jcl-over-slf4j</artifactId>
+				</exclusion>					
+				<exclusion>
+					<!-- Only needed for the client framework -->
+					<groupId>org.apache.httpcomponents</groupId>
+					<artifactId>httpclient</artifactId>
+				</exclusion>
+				<exclusion>
+					<!-- Only needed for the client framework -->
+					<groupId>commons-httpclient</groupId>
+					<artifactId>commons-httpclient</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 
 	</dependencies>
@@ -56,13 +85,11 @@
 			</plugin>
 			
 			<!-- Embedded Jetty with 'mvn jetty:run'. -->
-
 			<plugin>
 				<groupId>org.mortbay.jetty</groupId>
 				<artifactId>maven-jetty-plugin</artifactId>
 				<configuration>
-					<!-- force friendly name instead of artifact name + version -->
-					<contextPath>${build.finalName}</contextPath>
+					<contextPath>/</contextPath>
 					<!-- declare datasource -->
 					<jettyEnvXml>${basedir}/src/test/resources/jetty-env.xml</jettyEnvXml>
 					<!-- This parameter will auto-deploy modified classes -->
